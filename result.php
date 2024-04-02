@@ -3,60 +3,75 @@ session_start();
 
 // Function to fetch latitude and longitude of a city using HERE Geocoding API
 function getCoordinates($city) {
-    $url = "https://geocode.search.hereapi.com/v1/geocode?apikey=3VFewXIRgieH4zIzrL3-Fb6x19dZH_3G0i4dKUQwfxY&q=".urlencode($city)."";
+    $apiKey = "3VFewXIRgieH4zIzrL3-Fb6x19dZH_3G0i4dKUQwfxY";
+    $url = "https://geocode.search.hereapi.com/v1/geocode?q=" . urlencode($city) . "&apiKey=" . $apiKey;
+
     // Fetching data
     $response = file_get_contents($url);
+
     // Check for errors
     if ($response === false) {
         die('Error fetching data from HERE Geocoding API');
     }
+
     // Decode JSON response
     $data = json_decode($response, true);
+
     // Check if the response is valid
     if (!$data || !isset($data['items'][0]['position'])) {
         die('Invalid data received from HERE Geocoding API');
     }
+
     // Extracting latitude and longitude
     $latitude = $data['items'][0]['position']['lat'];
     $longitude = $data['items'][0]['position']['lng'];
+
     return array($latitude, $longitude);
 }
 
 if (isset($_POST['submitted'])) {
     $conn = mysqli_connect("localhost", "root", "", "city");
+
     if (!empty($_POST['city'])) {
         $city = $_POST['city'];
         $_SESSION['city'] = $city;
+
         // Fetch weather data from OpenWeatherMap API
         $weather_url = 'https://api.openweathermap.org/data/2.5/weather?q=' . urlencode($city) . '&appid=210eeeeafdb8e3d257cce72366d78b96';
         $weather_response = file_get_contents($weather_url);
+
         // Check for errors
         if ($weather_response === false) {
             die('Error fetching data from OpenWeatherMap API');
         }
+
         // Decode JSON response
         $weather_data = json_decode($weather_response, true);
+
         // Check if the response is valid
         if (!$weather_data || !isset($weather_data['main'])) {
             die('Invalid data received from OpenWeatherMap API');
         }
+
         // Extract weather information
         $temperature = $weather_data['main']['temp'];
         $description = $weather_data['weather'][0]['description'];
+
         // Output weather information
         echo "<p>Current temperature in $city: " . round($temperature - 273.15) . "°C</p>";
         echo "<p>Weather description: " . ucfirst($description) . "</p>";
+
         // Fetch coordinates of the city
         list($latitude, $longitude) = getCoordinates($city);
+
         // Display map
-        if (!empty($city) && strlen($city) > 0) {
-            echo "<iframe width='600' height='450' frameborder='0' style='border:0' src='https://www.here.com/embedded-maps/js/mapsapi/bundle/locations?app_id=YOUR_APP_ID&app_code=YOUR_APP_CODE&center=$latitude,$longitude&zoom=12' allowfullscreen></iframe>";
-        } else {
-            echo '<script>alert("Please enter a city name.");</script>';
-        }
+        echo "<iframe width='600' height='450' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/view?key=AIzaSyAw7JPrOIGMQ7q1CejfGL8bkF7CZq1FBQo&center=$latitude,$longitude&zoom=12' allowfullscreen></iframe>";
+    } else {
+        echo '<script>alert("Please enter a city name.");</script>';
     }
 }
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
