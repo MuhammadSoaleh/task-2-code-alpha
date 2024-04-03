@@ -56,16 +56,18 @@ if (isset($_POST['submitted'])) {
         // Extract weather information
         $temperature = $weather_data['main']['temp'];
         $description = $weather_data['weather'][0]['description'];
+        $feels_like = $weather_data[ 'main']['feels_like'];
 
         // Output weather information
         echo "<p>Current temperature in $city: " . round($temperature - 273.15) . "°C</p>";
+        echo "<p>Feels_Like temperature in $city: " . round($feels_like - 273.15) . "°C</p>";
         echo "<p>Weather description: " . ucfirst($description) . "</p>";
 
         // Fetch coordinates of the city
         list($latitude, $longitude) = getCoordinates($city);
 
         // Display map
-        echo "<iframe width='600' height='450' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/view?key=AIzaSyAw7JPrOIGMQ7q1CejfGL8bkF7CZq1FBQo&center=$latitude,$longitude&zoom=12' allowfullscreen></iframe>";
+        echo "<iframe src='https://www.google.com/maps/embed/v1/place?key=AIzaSyAYeMg6dTWCHbWfKr2rVu_-T78yOC8DEms&q=$latitude,$longitude' width='600' height='450' style='border:0;' allowfullscreen='' loading='lazy' referrerpolicy='no-referrer-when-downgrade'></iframe>";
     } else {
         echo '<script>alert("Please enter a city name.");</script>';
     }
