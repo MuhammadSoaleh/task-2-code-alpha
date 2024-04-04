@@ -77,17 +77,39 @@ if ($data_array !== null && !isset($data_array['error'])) {
         <div class="stock-data-container">
             <h2>Stock Market Data</h2>
             <?php
-                $stock_url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=37G0CRVXKAUHHZ4B";
-                $stock_json = file_get_contents($stock_url);
-                $stock_data = json_decode($stock_json, true);
 
-                if ($stock_data && isset($stock_data['error'])) {
-                    $latest_data = current($stock_data['Time Series (5min)']);
-                    echo "<p>Latest Close Price for IBM: " . $latest_data['4. close'] . "</p>";
-                } else {
-                    echo "<p>Unable to fetch stock data. Please try again later.</p>";
-                }
-            ?>
+// API endpoint
+$url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=WB23VT7P192TX6SU';
+
+// Initialize cURL session
+$ch = curl_init();
+
+// Set cURL options
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// Execute cURL request
+$response = curl_exec($ch);
+
+// Check for errors
+if(curl_errno($ch)){
+    echo 'Error: ' . curl_error($ch);
+}
+
+// Close cURL session
+curl_close($ch);
+
+// Decode JSON response
+$data = json_decode($response, true);
+
+// Print fetched data
+print_r($data);
+
+?>
+
+
+
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
