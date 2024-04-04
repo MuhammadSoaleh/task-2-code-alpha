@@ -32,6 +32,9 @@
         h1,h2,h3,h4,h5,h6{
             color: white;
         }
+        li{
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -49,7 +52,16 @@ $data_array = json_decode($json_data, true);
 if ($data_array !== null && !isset($data_array['error'])) {
     foreach ($data_array as $article) {
         $datetime = $article['datetime'];
+        $headline = $article['headline'];
+        $image = $article['image'];
+        $imageUrl = $article['imageUrl'];
+        $summary = $article['summary'];
         echo "<li>datetime: $datetime</li>";
+        echo "<li>Headline: $headline</li>";
+        echo "<li>image: $image</li>";
+        echo "<li>imageUrl: $imageUrl</li>";
+        echo "<li>summary: $summary</li>";
+        echo '<hr>';
     }
 } else {
     echo "Failed to fetch or decode JSON data.";
@@ -69,7 +81,7 @@ if ($data_array !== null && !isset($data_array['error'])) {
                 $stock_json = file_get_contents($stock_url);
                 $stock_data = json_decode($stock_json, true);
 
-                if ($stock_data && isset($stock_data['Time Series (5min)'])) {
+                if ($stock_data && isset($stock_data['error'])) {
                     $latest_data = current($stock_data['Time Series (5min)']);
                     echo "<p>Latest Close Price for IBM: " . $latest_data['4. close'] . "</p>";
                 } else {
