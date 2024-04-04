@@ -67,7 +67,7 @@ if (isset($_POST['submitted'])) {
         list($latitude, $longitude) = getCoordinates($city);
 
         // Display map
-        echo "<iframe src='https://www.google.com/maps/embed/v1/place?key=AIzaSyAYeMg6dTWCHbWfKr2rVu_-T78yOC8DEms&q=$latitude,$longitude' width='600' height='450' style='border:0;' allowfullscreen='' loading='lazy' referrerpolicy='no-referrer-when-downgrade'></iframe>";
+        echo "<iframe class='center' src='https://www.google.com/maps/embed/v1/place?key=AIzaSyAYeMg6dTWCHbWfKr2rVu_-T78yOC8DEms&q=$latitude,$longitude' width='600' height='450' style='border:0;' allowfullscreen='' loading='lazy' referrerpolicy='no-referrer-when-downgrade'></iframe>";
     } else {
         echo '<script>alert("Please enter a city name.");</script>';
     }
